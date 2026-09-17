@@ -1,0 +1,16 @@
+{
+    "title": "cekk test",
+    "description": "A new add-on for Plone that includes both backend and Volto frontend",
+    "project_slug": "cekk-test",
+    "author": "RedTurtle Technology",
+    "email": "sviluppo@redturtle.it",
+    "use_prerelease_versions": false,
+    "plone_version": "6.2.2",
+    "volto_version": "19.4.1",
+    "python_package_name": "cekk.test",
+    "npm_package_name": "volto-cekk-test",
+    "github_organization": "collective",
+    "container_registry": "github",
+    "initialize_documentation": true,
+    "__template__": "monorepo_addon"
+}

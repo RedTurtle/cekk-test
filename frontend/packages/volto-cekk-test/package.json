@@ -1,0 +1,48 @@
+{
+  "name": "@redturtle/volto-cekk-test",
+  "version": "1.0.0-alpha.0",
+  "description": "A new add-on for Plone that includes both backend and Volto frontend",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "keywords": [
+    "volto-addon",
+    "volto",
+    "plone",
+    "react"
+  ],
+  "author": "RedTurtle Technology",
+  "homepage": "https://github.com/collective/cekk-test#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:collective/cekk-test"
+  },
+  "publishConfig": {
+    "@redturtle:registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "scripts": {
+    "i18n": "rm -rf build/messages && NODE_ENV=production i18n --addon",
+    "dry-release": "release-it --dry-run",
+    "release": "release-it",
+    "release-major-alpha": "release-it major --preRelease=alpha",
+    "release-alpha": "release-it --preRelease=alpha"
+  },
+  "addons": [],
+  "theme": "",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@plone/registry": "^3.0.2",
+    "@plone/scripts": "^4.0.1",
+    "@plone/types": "^2.0.1",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.7.3",
+    "@testing-library/react": "^16.2.0",
+    "release-it": "^19.0.5",
+    "vitest": "^3.1.2"
+  }
+}

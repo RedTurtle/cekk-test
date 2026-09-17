@@ -1,0 +1,36 @@
+[repository]
+name = "cekk-test"
+changelog = "CHANGELOG.md"
+version = "version.txt"
+version_format = "semver"
+container_images_prefix = "ghcr.io/collective/cekk-test"
+compose = ["docker-compose.yml"]
+
+[repository.towncrier]
+section = "Project"
+settings = "towncrier.toml"
+
+[backend.package]
+name = "cekk.test"
+path = "backend"
+code_path = "src/cekk/test"
+changelog = "backend/CHANGELOG.md"
+towncrier_settings = "backend/pyproject.toml"
+base_package = "Products.CMFPlone"
+# lo pubblichiamo via github actions (pypi.yml)
+publish = false
+
+[frontend.package]
+name = "@redturtle/volto-cekk-test"
+path = "frontend/packages/volto-cekk-test"
+code_path = "src"
+changelog = "frontend/packages/volto-cekk-test/CHANGELOG.md"
+towncrier_settings = "frontend/packages/volto-cekk-test/towncrier.toml"
+base_package = "@plone/volto"
+# lo pubblichiamo via github actions (npm.yml)
+publish = false
+
+[cookieplone]
+template = "monorepo_addon"
+template_version = "98096dea66c9131d77568d02e43e42eb7bf90eb8"
+generated_date = "2026-09-17 20:07:33"

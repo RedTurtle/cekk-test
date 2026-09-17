@@ -1,0 +1,77 @@
+#!/bin/bash
+# Aggiorna versioni e changelog, e crea il tag.
+#
+# Non pubblica niente: repository.toml ha `publish = false` sia in
+# [backend.package] sia in [frontend.package], e ai due pacchetti pensa la CI
+# al push del tag (.github/workflows/pypi.yml e npm.yml), autenticandosi via
+# OIDC. Per questo qui non serve nessun token: ne' UV_PUBLISH_TOKEN, ne' un
+# token npm, che per giunta scadrebbe ogni 90 giorni.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+echo "==============================================="
+echo "Release cekk-test"
+echo "==============================================="
+
+# Promemoria, non un controllo: la configurazione del trusted publishing si
+# vede alla generazione del repo, che puo' essere di mesi prima, e non nel
+# momento in cui serve. Se manca, i workflow falliscono a tag GIA' creato.
+# Non blocca di proposito: lo stato npm sarebbe verificabile, quello del
+# pending publisher PyPI no, e una release legittima non deve dipendere da
+# mezza verifica.
+cat <<'PREREQ'
+
+Prerequisiti di pubblicazione, una tantum (non verificati qui)
+
+  npm    volto-cekk-test
+         il pacchetto deve esistere su npm e avere il trusted publisher
+         puntato su `npm.yml`. Se non l'hai mai fatto:  make bootstrap-npm
+
+  PyPI   cekk.test
+         serve un pending publisher su pypi.org -> Publishing, con workflow
+         `pypi.yml`. PyPI lo accetta anche prima che il progetto esista.
+
+Senza, il tag viene creato e le publish falliscono: in quel caso non rifare la
+release, rilancia da GitHub Actions il workflow fallito passando il tag.
+
+PREREQ
+
+# Nessun token richiesto per pubblicare. Resta opzionale GITHUB_TOKEN, che
+# serve solo a creare la GitHub release: senza, repoplone la salta e avvisa.
+
+# repoplone aggiorna anche versione e changelog del pacchetto frontend, quindi
+# node serve comunque, pur senza pubblicare su npm.
+if [ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]; then
+    # shellcheck disable=SC1091
+    . "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
+    nvm use
+else
+    echo "⚠️  nvm non trovato, uso il node corrente: $(node --version)"
+fi
+
+node -e 'const [maj, min] = process.versions.node.split(".").map(Number); if (maj < 18 || (maj === 18 && min < 12)) process.exit(1);' || {
+    echo "❌ Node $(node --version) troppo vecchio per pnpm (serve >= 18.12)."
+    exit 1
+}
+
+echo "==> Installo le dipendenze del frontend"
+cd "${REPO_ROOT}/frontend"
+pnpm install
+
+cd "${REPO_ROOT}"
+echo "==> repoplone release"
+uvx repoplone release
+
+echo ""
+echo "==============================================="
+echo "✅ Versioni, changelog e tag creati."
+echo ""
+echo "I pacchetti li pubblica la CI al push del tag:"
+echo "  backend  -> PyPI  ('Release latest version on PyPI')"
+echo "  frontend -> npm   ('Release latest version on npm')"
+echo ""
+echo "Se uno dei due workflow fallisce, NON rifare la release: rilancia quel"
+echo "workflow da GitHub Actions indicando il tag."
+echo "==============================================="
