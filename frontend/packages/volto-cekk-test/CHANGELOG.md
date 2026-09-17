@@ -7,3 +7,7 @@
 -->
 
 <!-- towncrier release notes start -->
+
+## 1.0.0-alpha.1 (2026-09-17)
+
+No significant changes.
