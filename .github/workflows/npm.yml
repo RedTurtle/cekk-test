@@ -57,7 +57,7 @@ jobs:
       - name: Disable Corepack's packageManager pin
         run: corepack disable
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           version: 11
 
