@@ -112,8 +112,8 @@ test: ## Run unit tests
 .PHONY: ci-test
 ci-test: ## Run unit tests in CI
 	# Unit Tests need the i18n to be built
-	VOLTOCONFIG=$(pwd)/volto.config.js pnpm --filter @plone/volto i18n
-	CI=1 pnpm run test --passWithNoTests
+	VOLTOCONFIG=$$(pwd)/volto.config.js pnpm --filter @plone/volto i18n
+	CI=1 pnpm run test
 
 .PHONY: backend-docker-start
 backend-docker-start:	## Starts a Docker-based backend for development
